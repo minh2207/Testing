@@ -14,14 +14,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    // Cài đặt Docker nếu chưa có
-                    sh "sudo apt update"
-                    sh "sudo apt install -y docker.io"
-                    
-                    // Kiểm tra cài đặt Docker
-                    sh "docker --version"
-                    
+                script {                  
                     // Build Docker image
                     sh "docker build -t ${DOCKER_IMAGE} ."
                 }
