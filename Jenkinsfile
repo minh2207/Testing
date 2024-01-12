@@ -2,29 +2,21 @@ pipeline {
     agent any
     
     stages {
-        stage('Clone repository') {
+        stage('Clone') {
             steps {
                 git 'https://github.com/minh2207/Testing.git'
             }
         }
         
-        stage('Build and run with Docker') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build('test') {
-                        // Thực hiện các bước xây dựng Docker image
-                        // Ví dụ:
-                        sh 'docker build -t test .'
-                    }
-                    
-                    // Chạy Docker container từ image đã xây dựng
-                    // Ví dụ:
-                    docker.image('test').run('-p 3000:3000') {
-                        // Thực hiện các bước chạy trong container
-                        // Ví dụ:
-                        sh 'docker run -p 3000:3000 test'
-                    }
-                }
+                sh 'docker build -t my-node-app .'
+            }
+        }
+        
+        stage('Run Docker Container') {
+            steps {
+                sh 'docker run -d -p 8080:8080 my-node-app'
             }
         }
     }
