@@ -10,18 +10,19 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://hub.docker.com/') {
-                    	sh 'docker build -t demo-testing .'
-			sh 'docker push minh2207/testing:demo-testing'
-                }    
+                bat "docker build -t minh2207/testing:latest ."
             }
         }
-        
-        stage('Run Docker Container') {
+        stage('Docker Deloy') {
             steps {
-                 withDockerRegistry(credentialsId: 'docker-hub', url: 'https://hub.docker.com/') {
-                      	sh 'docker run -dp 3000:3000 minh2207/testing:demo-testing'
-                 }
+                script{
+                    withCredentials([usernamePassword(credentialsId:'docker-hub',usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD')]){
+                        echo "This works: $USERNAME $PASSWORD"
+                        bat "docker login --username $USERNAME --password $PASSWORD"
+                        bat "docker push minh2207/testing:latest"
+                    }
+                }
             }
         }
     }
