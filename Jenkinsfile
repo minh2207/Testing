@@ -10,7 +10,7 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t minh2207/testing:latest ."
+                sh "docker build -t minh2207/testing:latest ."
             }
         }
         stage('Docker Deloy') {
@@ -19,8 +19,8 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId:'docker-hub',usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD')]){
                         echo "This works: $USERNAME $PASSWORD"
-                        bat "docker login --username $USERNAME --password $PASSWORD"
-                        bat "docker push minh2207/testing:latest"
+                        sh "docker login --username $USERNAME --password $PASSWORD"
+                        sh "docker push minh2207/testing:latest"
                     }
                 }
             }
