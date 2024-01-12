@@ -1,5 +1,5 @@
 pipeline {
-    Docker
+    Docker image
     stages {
         stage('Clone') {
             steps {
