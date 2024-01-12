@@ -1,10 +1,6 @@
 pipeline {
     agent any
     
-    environment {
-        DOCKER_IMAGE = 'minh2207/testing:latest'
-    }
-    
     stages {
         stage('Clone') {
             steps {
