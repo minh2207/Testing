@@ -1,19 +1,33 @@
 pipeline {
     agent any
-    
+
+    environment {
+        DOCKER_IMAGE = "myapp:${env.BUILD_ID}"
+        DOCKER_REGISTRY = 'https://your.docker.registry'
+        DOCKER_REGISTRY_CREDENTIALS = 'your-registry-credentials-id'
+    }
+
     stages {
-        stage('Clone') {
+        stage('Build and Push Image') {
             steps {
-                git branch: 'main', url: 'https://github.com/minh2207/Testing.git'
+                script {
+                    withDockerRegistry(credentialsId: "${env.DOCKER_REGISTRY_CREDENTIALS}", url: "${env.DOCKER_REGISTRY}") {
+                        // Building Docker Image
+                        dockerImage = docker.build("${env.DOCKER_IMAGE}")
+
+                        // Pushing Image to Registry
+                        dockerImage.push()
+                    }
+                }
             }
         }
-        
-        stage('Build Docker Image') {
+
+        stage('Run') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
-                    	sh "docker build -t demo-testing ."
-			sh "docker push minh2207/testing:demo-testing"
-                }    
+                script {
+                    // Running Docker Container
+                    sh "docker run --name myapp-container -d -p 8080:8080 ${env.DOCKER_IMAGE}"
+                }
             }
         }
     }
