@@ -10,7 +10,7 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+                withDockerRegistry(credentialsId: 'minh2207', url: 'https://index.docker.io/v1/') {
                     	sh label: '', script: 'docker build -t demo-testing .'
 			sh label: '', script: 'docker push minh2207/testing:demo-testing'
                 }    
@@ -19,7 +19,7 @@ pipeline {
         
         stage('Run Docker Container') {
             steps {
-                 withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+                 withDockerRegistry(credentialsId: 'minh2207', url: 'https://index.docker.io/v1/') {
                       	sh label: '', script: 'docker run -dp 3000:3000 minh2207/testing:demo-testing'
                  }
             }
