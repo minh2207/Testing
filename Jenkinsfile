@@ -20,7 +20,7 @@ agent any
                     withCredentials([usernamePassword(credentialsId:'docker-hub',usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD')]){
                         echo "This works: $USERNAME $PASSWORD"
-                        sh "docker login --username $USERNAME --password $PASSWORD"
+                        bat "docker login --username $USERNAME --password $PASSWORD"
                         //sh "docker push minh2207/testing:latest"
                     }
                 }
