@@ -1,32 +1,38 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = "myapp:${env.BUILD_ID}"
-        DOCKER_REGISTRY = 'https://your.docker.registry'
-        DOCKER_REGISTRY_CREDENTIALS = 'your-registry-credentials-id'
-    }
-
     stages {
-        stage('Build and Push Image') {
+        stage('Compile and TestTest') {
             steps {
-                script {
-                    withDockerRegistry(credentialsId: "${env.DOCKER_REGISTRY_CREDENTIALS}", url: "${env.DOCKER_REGISTRY}") {
-                        // Building Docker Image
-                        dockerImage = docker.build("${env.DOCKER_IMAGE}")
+                // Get some code from a GitHub repository
+                git branch:'main', url: 'https://github.com/minh2207/Testing.git'
 
-                        // Pushing Image to Registry
-                        dockerImage.push()
-                    }
-                }
+                // Run Maven on a Unix agent.
+                // bat "mvn clean compile test"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
         }
-
-        stage('Run') {
+        // stage('Build Spring Boot JAR File') {
+        //     steps {
+        //         bat "mvn clean package "
+        //     }
+        // }
+        stage('Docker Images') {
             steps {
-                script {
-                    // Running Docker Container
-                    sh "docker run --name myapp-container -d -p 8080:8080 ${env.DOCKER_IMAGE}"
+                sh "docker build -t minh2207/testing:latest ."
+            }
+        }
+        stage('Docker Deloy') {
+            steps {
+                script{
+                    withCredentials([usernamePassword(credentialsId:'docker-hub',usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD')]){
+                        echo "This works: $USERNAME $PASSWORD"
+                        sh "docker login --username $USERNAME --password $PASSWORD"
+                        sh "docker push minh2207/testing:latest"
+                    }
                 }
             }
         }
