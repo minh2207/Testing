@@ -1,7 +1,8 @@
 pipeline {
-    agent any
+    
+agent any
 	
-    stages {
+	stages {
         stage('Clone') {
             steps {
                 git branch: 'main', url: 'https://github.com/minh2207/Testing.git'
