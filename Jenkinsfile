@@ -1,37 +1,44 @@
 pipeline {
     agent any
-
+    
+    environment {
+        DOCKER_IMAGE = 'minh2207/testing:latest'
+    }
+    
     stages {
-        stage('Compile and TestTest') {
+        stage('Clone') {
             steps {
-                // Get some code from a GitHub repository
-                git branch:'main', url: 'https://github.com/minh2207/Testing.git'
+                git branch: 'main', url: 'https://github.com/minh2207/Testing.git'
+            }
+        }
 
-                // Run Maven on a Unix agent.
-                bat "mvn clean compile test"
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Cài đặt Docker nếu chưa có
+                    sh "sudo apt update"
+                    sh "sudo apt install -y docker.io"
+                    
+                    // Kiểm tra cài đặt Docker
+                    sh "docker --version"
+                    
+                    // Build Docker image
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
+            }
+        }
 
-                // To run Maven on a Windows agent, use
-                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
-            }
-        }
-        stage('Build Spring Boot JAR File') {
+        stage('Docker Deploy') {
             steps {
-                bat "mvn clean package "
-            }
-        }
-        stage('Docker Images') {
-            steps {
-                bat "docker build -t minh2207/testing:latest ."
-            }
-        }
-        stage('Docker Deloy') {
-            steps {
-                script{
-                    withCredentials([usernamePassword(credentialsId:'docker-hub',usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD')]){
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         echo "This works: $USERNAME $PASSWORD"
-                        bat "docker login --username $USERNAME --password $PASSWORD"
-                        bat "docker push minh2207/testing:latest"
+                        
+                        // Đăng nhập vào Docker Hub
+                        sh "docker login --username $USERNAME --password $PASSWORD"
+                        
+                        // Push Docker image lên Docker Hub
+                        sh "docker push ${DOCKER_IMAGE}"
                     }
                 }
             }
