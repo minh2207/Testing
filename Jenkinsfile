@@ -9,11 +9,11 @@ agent any
             }
         }
         
-        stage('Build Docker Image') {
-            steps {
-		bat "docker build -t minh2207/testing:latest ."
-            }
-        }
+  //       stage('Build Docker Image') {
+  //           steps {
+		// bat "docker build -t minh2207/testing:latest ."
+  //           }
+  //       }
         stage('Docker Deloy') {
             steps {
                 script{
@@ -21,7 +21,7 @@ agent any
                     passwordVariable: 'PASSWORD')]){
                         echo "This works: $USERNAME $PASSWORD"
                         sh "docker login --username $USERNAME --password $PASSWORD"
-                        sh "docker push minh2207/testing:latest"
+                        //sh "docker push minh2207/testing:latest"
                     }
                 }
             }
