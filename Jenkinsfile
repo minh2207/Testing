@@ -10,13 +10,17 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t my-node-app .'
+                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+                    sh 'docker build -t testing'
+                }    
             }
         }
         
         stage('Run Docker Container') {
             steps {
-                sh 'docker run -d -p 8080:8080 my-node-app'
+                 withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+                       sh 'docker run -dp 3000:3000 testing'
+                 }
             }
         }
     }
