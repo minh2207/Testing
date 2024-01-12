@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'ubuntu'
+    }
     
     environment {
         DOCKER_IMAGE = 'minh2207/testing:latest'
@@ -16,8 +18,11 @@ pipeline {
             steps {
                 script {
                     // Cài đặt Docker nếu chưa có
-                    sh "curl -fsSL https://get.docker.com -o get-docker.sh"
-                    sh "sudo sh get-docker.sh"
+                    sh "sudo apt update"
+                    sh "sudo apt install -y docker.io"
+                    
+                    // Kiểm tra cài đặt Docker
+                    sh "docker --version"
                     
                     // Build Docker image
                     sh "docker build -t ${DOCKER_IMAGE} ."
