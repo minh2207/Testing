@@ -1,46 +1,27 @@
 pipeline {
     agent any
     
-    environment {
-        DOCKER_IMAGE = 'minh2207/testing:latest'
-    }
-    
     stages {
         stage('Clone') {
             steps {
                 git branch: 'main', url: 'https://github.com/minh2207/Testing.git'
             }
         }
-
+        
         stage('Build Docker Image') {
             steps {
-                script {
-                    // Cài đặt Docker nếu chưa có
-                    sh "sudo apt update"
-                    sh "sudo apt install -y docker.io"
-                    
-                    // Kiểm tra cài đặt Docker
-                    sh "docker --version"
-                    
-                    // Build Docker image
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                }
+                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+                    	sh label: '', script: 'docker build -t demo-testing .'
+			sh label: '', script: 'docker push minh2207/testing:demo-testing'
+                }    
             }
         }
-
-        stage('Docker Deploy') {
+        
+        stage('Run Docker Container') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        echo "This works: $USERNAME $PASSWORD"
-                        
-                        // Đăng nhập vào Docker Hub
-                        sh "docker login --username $USERNAME --password $PASSWORD"
-                        
-                        // Push Docker image lên Docker Hub
-                        sh "docker push ${DOCKER_IMAGE}"
-                    }
-                }
+                 withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+                      	sh label: '', script: 'docker run -dp 3000:3000 minh2207/testing:demo-testing'
+                 }
             }
         }
     }
