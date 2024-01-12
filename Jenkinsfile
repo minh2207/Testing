@@ -23,7 +23,7 @@ pipeline {
                     docker.image('test').run('-p 3000:3000') {
                         // Thực hiện các bước chạy trong container
                         // Ví dụ:
-                        sh 'docker run -p 3000:3000 minh2207/testing'
+                        sh 'docker run -p 3000:3000 minh2207/testing:test'
                     }
                 }
             }
