@@ -15,6 +15,7 @@ pipeline {
                         // Thực hiện các bước xây dựng Docker image
                         // Ví dụ:
                         sh 'docker build -t test .'
+                        sh 'docker push minh2207/testing:test'
                     }
                     
                     // Chạy Docker container từ image đã xây dựng
@@ -22,7 +23,7 @@ pipeline {
                     docker.image('test').run('-p 3000:3000') {
                         // Thực hiện các bước chạy trong container
                         // Ví dụ:
-                        sh 'docker run -p 3000:3000 test'
+                        sh 'docker run -p 3000:3000 minh2207/testing'
                     }
                 }
             }
