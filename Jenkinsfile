@@ -9,11 +9,11 @@ agent any
             }
         }
         
-  //       stage('Build Docker Image') {
-  //           steps {
-		// bat "docker build -t minh2207/testing:latest ."
-  //           }
-  //       }
+        stage('Build Docker Image') {
+            steps {
+		bat "docker build -t minh2207/testing:latest ."
+            }
+        }
         stage('Docker Deloy') {
             steps {
                 script{
