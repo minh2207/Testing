@@ -2,39 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Compile and TestTest') {
+        stage('Clone app') {
             steps {
-                // Get some code from a GitHub repository
                 git branch:'main', url: 'https://github.com/minh2207/Testing.git'
+        pipeline {
+    agent any
 
-                // Run Maven on a Unix agent.
-                // bat "mvn clean compile test"
+    stages {
+        stage('Build') {
+            steps {
+                // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+    sh "docker build -t minh2207/testing ."
+    			sh "docker push minh2207/testing"
 
-                // To run Maven on a Windows agent, use
-                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+}
             }
         }
-        // stage('Build Spring Boot JAR File') {
-        //     steps {
-        //         bat "mvn clean package "
-        //     }
-        // }
-        stage('Docker Images') {
-            steps {
-                sh "docker build -t minh2207/testing:latest ."
-            }
-        }
-        stage('Docker Deloy') {
-            steps {
-                script{
-                    withCredentials([usernamePassword(credentialsId:'docker-hub',usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD')]){
-                        echo "This works: $USERNAME $PASSWORD"
-                        sh "docker login --username $USERNAME --password $PASSWORD"
-                        sh "docker push minh2207/testing:latest"
-                    }
-                }
-            }
-        }
+    }
+}
     }
 }
