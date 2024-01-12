@@ -1,5 +1,5 @@
 pipeline {
-    Docker image
+    Dockerhub
     stages {
         stage('Clone') {
             steps {
