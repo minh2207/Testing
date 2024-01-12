@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {                  
                     // Build Docker image
-                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    bat "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
         }
@@ -28,10 +28,10 @@ pipeline {
                         echo "This works: $USERNAME $PASSWORD"
                         
                         // Đăng nhập vào Docker Hub
-                        sh "docker login --username $USERNAME --password $PASSWORD"
+                        bat "docker login --username $USERNAME --password $PASSWORD"
                         
                         // Push Docker image lên Docker Hub
-                        sh "docker push ${DOCKER_IMAGE}"
+                        bat "docker push ${DOCKER_IMAGE}"
                     }
                 }
             }
