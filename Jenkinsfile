@@ -11,7 +11,7 @@ agent any
         
         stage('Build Docker Image') {
             steps {
-                sh "apt-get install docker.io"
+                sh "sudo apt-get install docker.io"
 		sh "docker build -t minh2207/testing:latest ."
             }
         }
