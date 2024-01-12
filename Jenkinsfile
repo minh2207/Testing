@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'ubuntu'
-    }
+    agent any
     
     environment {
         DOCKER_IMAGE = 'minh2207/testing:latest'
