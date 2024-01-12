@@ -2,20 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone app') {
+        // stage('Clone app') {
+        //     steps {
+        //         git 'https://github.com/minh2207/Testing.git'
+        //     }
+        // }
+        stage('Build') {
             steps {
-                git 'https://github.com/minh2207/Testing.git'
+                // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+    sh "docker build -t minh2207/demojenkins ."
+
+}
             }
         }
-//         stage('Build') {
-//             steps {
-//                 // This step should not normally be used in your script. Consult the inline help for details.
-// withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
-//     sh "docker build -t minh2207/demojenkins ."
-
-// }
-//             }
-//         }
 //          stage('Push') {
 //             steps {
 //                 // This step should not normally be used in your script. Consult the inline help for details.
